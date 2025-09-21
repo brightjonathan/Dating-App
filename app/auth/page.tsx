@@ -1,4 +1,5 @@
 "use client";
+import { createClient } from "@/lib/superbase/client"; //importing the function from client.ts
 import { useState } from "react";
 
 
@@ -9,6 +10,21 @@ const AuthPage = () => {
   const [password, setPassword] = useState<string>(""); //type string
   const [loading, setLoading] = useState<boolean>(false); //type boolean
   const [error, setError] = useState<string>("");
+  const superbase = createClient();
+
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+  
+    try {
+      //start with this logic tommorrow with superbase auth
+      //stop at 17:30
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }
 
 
 
@@ -24,7 +40,7 @@ const AuthPage = () => {
           </p>
         </div>
 
-        <form className="space-y-6" >
+        <form className="space-y-6"  onSubmit={handleAuth} >
           <div>
             <label
               htmlFor="email"
