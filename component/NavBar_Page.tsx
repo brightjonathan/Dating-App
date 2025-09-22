@@ -81,3 +81,5 @@ const NavBar_Page = () => {
 }
 
 export default NavBar_Page;
+
+// stop at 35:00
