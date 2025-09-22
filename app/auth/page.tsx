@@ -1,6 +1,9 @@
 "use client";
+
+import { useAuth } from "@/contexts/auth-context";
 import { createClient } from "@/lib/superbase/client"; //importing the function from client.ts
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 
 const AuthPage = () => {
@@ -11,6 +14,15 @@ const AuthPage = () => {
   const [loading, setLoading] = useState<boolean>(false); //type boolean
   const [error, setError] = useState<string>("");
   const superbase = createClient();
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+
+   useEffect(() => {
+    if (user && !authLoading) {
+      router.push("/");
+    }
+  }, [user, authLoading, router]);
+
 
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -19,13 +31,32 @@ const AuthPage = () => {
     setError("");
   
     try {
-      //start with this logic tommorrow with superbase auth
-      //stop at 17:30
+        if (isSignUp){
+         const {data, error} = await superbase.auth.signUp({
+          email, 
+          password, 
+         });
+
+          if (error) throw error;
+        if (data.user && !data.session) {
+          setError("Please check your email for a confirmation link");
+          return;
+        }
+
+        }else{ 
+          const { error } = await superbase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        }
     } catch (error: any) {
       console.log(error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   }
-
 
 
   return (
