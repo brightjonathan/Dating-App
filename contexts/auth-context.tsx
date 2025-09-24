@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode })=>{
         const {data: { session } } = await superbase.auth.getSession();
 
         setUser(session?.user ?? null);
-        console.log(session?.user);
+        //console.log(session?.user);
 
         const { data: { subscription }} = superbase.auth.onAuthStateChange(async (event, session) => {
           setUser(session?.user ?? null);
