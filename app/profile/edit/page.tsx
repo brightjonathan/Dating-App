@@ -1,7 +1,7 @@
 
 'use client';
 import { PhotoUpload } from "@/component/PhotoUpload";
-import { getCurrentUserProfile } from "@/lib/action/profile";
+import { getCurrentUserProfile, updateUserProfile } from "@/lib/action/profile";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -22,9 +22,6 @@ const EditProfilepage = () => {
     avatar_url: "",
   });
 
-  //console.log(formData);
-  
-
   const handleInputChange = (e:
      React.ChangeEvent< HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement >)=> {
     const { name, value } = e.target;
@@ -32,7 +29,7 @@ const EditProfilepage = () => {
       ...prev,
       [name]: value,
     }));
-  }
+  };
 
   useEffect(() => {
     const loadProfile = async()=> {
@@ -58,6 +55,28 @@ const EditProfilepage = () => {
     loadProfile();
   }, []);
 
+  //submit the form functionality
+  const handleFormSubmit =  async(e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+
+    try {
+       const result = await updateUserProfile(formData);
+      if (result.success) {
+        router.push("/profile");
+      } else {
+        setError(result.error || "Failed to update profile.");
+      }
+
+    } catch (error: any) {
+      setError(error)
+    }finally{
+      setSaving(false)
+    }
+  
+  }
+
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-red-50 dark:from-gray-900 dark:to-gray-800">
@@ -73,6 +92,7 @@ const EditProfilepage = () => {
 
         <div className="max-w-2xl mx-auto">
           <form
+             onSubmit={handleFormSubmit}
             className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8"
           >
             <div className="mb-8">
@@ -214,11 +234,11 @@ const EditProfilepage = () => {
               </p>
             </div>
 
-            {/* {error && (
+            {error && (
               <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
                 {error}
               </div>
-            )} */}
+            )}
 
             <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
               <button

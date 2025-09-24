@@ -1,5 +1,6 @@
 'use server'
 
+import { UserProfile } from "@/app/profile/page";
 import { createClient } from "../superbase/server";
 
 //getting the user for useability
@@ -28,7 +29,7 @@ export const getCurrentUserProfile = async()=>{
 };
 
 
-
+//upload profile photo functionality
 export const uploadProfilePhoto = async(file: File)=> {
   const supabase = await createClient();
 
@@ -59,3 +60,39 @@ export const uploadProfilePhoto = async(file: File)=> {
   } = supabase.storage.from("profile-photos").getPublicUrl(fileName);
   return { success: true, url: publicUrl };
 }
+
+
+//update user profile functionality
+export const updateUserProfile = async(profileData: Partial<UserProfile>)=>{
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  const { error } = await supabase
+    .from("users")
+    .update({
+      full_name: profileData.full_name,
+      username: profileData.username,
+      bio: profileData.bio,
+      gender: profileData.gender,
+      birthdate: profileData.birthdate,
+      avatar_url: profileData.avatar_url,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+     if (error) {
+      console.log(error);
+      return { success: false, error: error.message };
+    }
+
+  return { success: true };
+
+};

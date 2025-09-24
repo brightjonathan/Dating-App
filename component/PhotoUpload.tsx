@@ -1,6 +1,6 @@
 "use client";
 
-import { uploadProfilePhoto } from "@/lib/action/profile";
+import { uploadProfilePhoto,  } from "@/lib/action/profile";
 import { log } from "console";
 import { useRef, useState } from "react";
 
