@@ -6,11 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "create-fake-profiles": "tsx scripts/create-fake-profiles.ts"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "@stream-io/video-react-sdk": "^1.21.3",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.4",
+    "dotenv": "^17.2.2",
     "next": "15.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0"
